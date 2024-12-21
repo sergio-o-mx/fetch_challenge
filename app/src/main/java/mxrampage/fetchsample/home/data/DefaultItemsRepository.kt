@@ -33,7 +33,6 @@ class DefaultItemsRepository @Inject constructor(
         val itemsModelArray = ArrayList<ItemsModel>()
         mappedItems.forEach { entry ->
             itemsModelArray.add(ItemsModel(entry.key, null, null))
-            //val sortedByName = entry.value.sortedBy { it.name }
             val sortedByName = entry.value.sortedWith { o1, o2 -> extractInt(o1) - extractInt(o2) }
             sortedByName.forEach { item ->
                 itemsModelArray.add(ItemsModel(null, item.id, item.name.toString()))
@@ -44,7 +43,6 @@ class DefaultItemsRepository @Inject constructor(
 
     private fun extractInt(item: ItemsDAO): Int {
         val num = item.name?.replace("\\D".toRegex(), "")
-        // return 0 if no digits found
         return if (num.isNullOrEmpty()) 0 else Integer.parseInt(num)
     }
 }
