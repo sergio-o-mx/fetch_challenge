@@ -6,7 +6,6 @@ import mxrampage.fetchsample.rest.services.ItemsService
 import mxrampage.fetchsample.utils.Resource
 import java.util.SortedMap
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class DefaultItemsRepository @Inject constructor(
     private val itemsService: ItemsService
@@ -33,11 +32,19 @@ class DefaultItemsRepository @Inject constructor(
     private fun createArrayOfItems(mappedItems: SortedMap<Int, List<ItemsDAO>>): ArrayList<ItemsModel> {
         val itemsModelArray = ArrayList<ItemsModel>()
         mappedItems.forEach { entry ->
-            val sortedByName = entry.value.sortedBy { it.name }
+            itemsModelArray.add(ItemsModel(entry.key, null, null))
+            //val sortedByName = entry.value.sortedBy { it.name }
+            val sortedByName = entry.value.sortedWith { o1, o2 -> extractInt(o1) - extractInt(o2) }
             sortedByName.forEach { item ->
-                itemsModelArray.add(ItemsModel(item.id, item.name.toString()))
+                itemsModelArray.add(ItemsModel(null, item.id, item.name.toString()))
             }
         }
         return itemsModelArray
+    }
+
+    private fun extractInt(item: ItemsDAO): Int {
+        val num = item.name?.replace("\\D".toRegex(), "")
+        // return 0 if no digits found
+        return if (num.isNullOrEmpty()) 0 else Integer.parseInt(num)
     }
 }

@@ -3,4 +3,5 @@
     <string name="label_error">Something went wrong, please try again</string>
     <string name="progress_bar_loading">Loading</string>
     <string name="item_id_template">id: %d</string>
+    <string name="header_id_template">listId: %d</string>
 </resources>
